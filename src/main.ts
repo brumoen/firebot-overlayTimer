@@ -1,32 +1,28 @@
 import { Firebot } from "firebot-custom-scripts-types";
+import { buildOverlayTimerEffectType } from "./overlay-timer-effect";
 
-interface Params {
-  message: string;
-}
+interface Params {}
 
 const script: Firebot.CustomScript<Params> = {
   getScriptManifest: () => {
     return {
-      name: "Starter Custom Script",
-      description: "A starter custom script for build",
-      author: "SomeDev",
-      version: "1.0",
+      name: "Firebot Overlay Timer",
+      description: "This adds an Overlay Timer Effect to Firebot",
+      author: "Perry",
+      version: "0.1",
       firebotVersion: "5",
     };
   },
   getDefaultParameters: () => {
-    return {
-      message: {
-        type: "string",
-        default: "Hello World!",
-        description: "Message",
-        secondaryDescription: "Enter a message here",
-      },
-    };
+    return {};
   },
   run: (runRequest) => {
+    const { effectManager, frontendCommunicator } = runRequest.modules;
     const { logger } = runRequest.modules;
-    logger.info(runRequest.parameters.message);
+    const request = (runRequest.modules as any).request;
+    effectManager.registerEffect(
+      buildOverlayTimerEffectType(request, frontendCommunicator)
+    );
   },
 };
 

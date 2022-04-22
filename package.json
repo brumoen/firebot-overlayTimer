@@ -1,8 +1,8 @@
 {
   "name": "firebot-custom-script-starter",
-  "scriptOutputName": "starterScript",
-  "version": "1.0.0",
-  "description": "A starter Firebot custom script",
+  "scriptOutputName": "overlayTimer",
+  "version": "0.1",
+  "description": "Overlay Timer for Firebot added via custom script",
   "main": "",
   "scripts": {
     "build": "webpack",
@@ -10,7 +10,7 @@
     "copy": "node ./scripts/copy-build.js",
     "test": "jest"
   },
-  "author": "ebiggz",
+  "author": "ThePerry",
   "license": "GNU3",
   "devDependencies": {
     "@types/node": "^14.14.6",
