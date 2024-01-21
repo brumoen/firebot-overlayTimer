@@ -74,12 +74,12 @@ export function buildOverlayTimerEffectType(
             <!-- Advanced Settings Accordion -->
             <eos-container>
                 <div style="margin-bottom: 20px; margin-top: 20px;">
-                    <div class="sys-command-row" ng-init="hidePanel = true" ng-click="hidePanel = !hidePanel" ng-class="{expanded: !hidePanel}">
+                    <div class="sys-command-row" ng-init="hidePanel = true" ng-click="hidePanel = !hidePanel">
                         <div style="flex-basis: 100%;padding-left: 20px;">
                             Advanced Settings
                         </div>
                         <div style="flex-basis:30px; flex-shrink: 0;">
-                            <i class="fas" ng-class="{fa-chevron-right: hidePanel, fa-chevron-down: !hidePanel}"></i>
+                            <i class="fas"></i>
                         </div>
                     </div>
                     <div uib-collapse="hidePanel" class="sys-command-expanded">
@@ -112,12 +112,12 @@ export function buildOverlayTimerEffectType(
             <!-- Overlay Settings Accordion -->
             <eos-container>
                 <div style="margin-bottom: 20px; margin-top: 20px;">
-                    <div class="sys-command-row" ng-init="hidePanel = true" ng-click="hidePanel = !hidePanel" ng-class="{expanded: !hidePanel}">
+                    <div class="sys-command-row" ng-init="hidePanel = true" ng-click="hidePanel = !hidePanel">
                         <div style="flex-basis: 100%;padding-left: 20px;">
                             Overlay Settings
                         </div>
                         <div style="flex-basis:30px; flex-shrink: 0;">
-                            <i class="fas" ng-class="{fa-chevron-right: hidePanel, fa-chevron-down: !hidePanel}"></i>
+                            <i class="fas"></i>
                         </div>
                     </div>
                     <div uib-collapse="hidePanel" class="sys-command-expanded">
@@ -171,9 +171,18 @@ export function buildOverlayTimerEffectType(
                                 <div class="control__indicator"></div>
                             </label>
                         </div>
+                        <div style="padding: 15px 20px 10px 20px;">
+                            <eos-overlay-position effect="effect" class="setting-padtop"></eos-overlay-position>
+                            <eos-enter-exit-animations effect="effect" class="setting-padtop"></eos-enter-exit-animations>
+                            <eos-overlay-instance effect="effect" class="setting-padtop"></eos-overlay-instance>
+                        </div>
                     </div>
                 </div>
             </eos-container>
+            <div class="effect-info alert alert-warning">
+                This effect requires the Firebot overlay to be loaded in your broadcasting software. <a href ng-click="showOverlayInfoModal(effect.overlayInstance)" style="text-decoration:underline">Learn more</a>
+            </div>
+
             <!-- /Overlay Settings Accordion ends -->
             `,
         optionsController: ($scope) => {
