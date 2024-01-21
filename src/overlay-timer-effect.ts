@@ -72,120 +72,105 @@ export function buildOverlayTimerEffectType(
             </eos-container>
 
             <!-- Advanced Settings Accordion -->
-            <eos-container>
-                <div style="margin-bottom: 20px; margin-top: 20px;">
-                    <div class="sys-command-row" ng-init="hidePanel = true" ng-click="hidePanel = !hidePanel">
-                        <div style="flex-basis: 100%;padding-left: 20px;">
-                            Advanced Settings
-                        </div>
-                        <div style="flex-basis:30px; flex-shrink: 0;">
-                            <i class="fas"></i>
-                        </div>
+
+            <div style="margin-bottom: 10px; margin-top: 10px;"></div>
+            <eos-container header="Settings">
+                <collapsable-panel header="Advanced Settings">
+                    <div class="muted" style="font-weight:bold; font-size: 12px;">
+                        DESCRIPTION
                     </div>
-                    <div uib-collapse="hidePanel" class="sys-command-expanded">
-                        <div style="padding: 15px 20px 10px 20px;">
-                            <div class="muted" style="font-weight:bold; font-size: 12px;">
-                                DESCRIPTION
-                            </div>
-                            <p style="font-size: 12px">
-                                Here you can choose what the timer is supposed to do when it runs out,<br/>
-                                as well as set how long it should be visible on the screen after it runs out
-                            </p>
-                            <div>
-                                <firebot-input input-title="Timer Trigger" model="effect.endTriggerCallUrl" placeholder="Time Up Trigger."></firebot-input>
-                                <p style="font-size: 10px">
-                                    * You can add a Preset Effect List URL here to have the counter trigger actions when done.
-                                </p>
-                            </div>
-                            <div>
-                                <firebot-input input-title="Timer Delay" model="effect.timerDelay" placeholder="Timer Delay."></firebot-input>
-                                <p style="font-size: 10px">
-                                    * How long do you want the timer to stay on screen when it's done?
-                                </p>
-                            </div>
-                        </div>
+                    <p style="font-size: 12px">
+                        Here you can choose what the timer is supposed to do when it runs out,<br/>
+                        as well as set how long it should be visible on the screen after it runs out
+                    </p>
+                    <div>
+                        <firebot-input input-title="Timer Trigger" model="effect.endTriggerCallUrl" placeholder="Time Up Trigger."></firebot-input>
+                        <p style="font-size: 10px">
+                            * You can add a Preset Effect List URL here to have the counter trigger actions when done.
+                        </p>
                     </div>
-                </div>
+                    <div>
+                        <firebot-input input-title="Timer Delay" model="effect.timerDelay" placeholder="Timer Delay."></firebot-input>
+                        <p style="font-size: 10px">
+                            * How long do you want the timer to stay on screen when it's done?
+                        </p>
+                    </div>
+                </collapsable-panel>
+                <!-- /Advanced Settings Accordion ends -->
+
+                <div style="margin-bottom: 10px; margin-top: 10px;"></div>
+
+                <!-- Container Settings Accordion -->
+                <collapsable-panel header="Container Settings">
+                    <div class="input-group" style="margin-bottom: 10px;">
+                        <span class="input-group-addon">Width (in pixels)</span>
+                        <input
+                            class="form-control"
+                            type="number"
+                            min="1" max="10000"
+                            ng-model="effect.width">
+                        <span class="input-group-addon">Height (in pixels)</span>
+                        <input
+                            class="form-control"
+                            type="number"
+                            min="1" max="10000"
+                            ng-model="effect.height">
+                    </div>
+                    <p>This defines the size of the (invisible) box that the above timer will be placed in.</p>
+
+                    <label class="control-fb control--checkbox"> Show Debug Border <tooltip text="'Show a red border around the timer to make it easier to see its position.'"></tooltip>
+                        <input type="checkbox" ng-model="effect.debugBorder" />
+                        <div class="control__indicator"></div>
+                    </label>
+
+                    <p>Justification</p>
+                    <label class="control-fb control--radio">Left
+                        <input type="radio" ng-model="effect.justify" value="flex-start"/>
+                        <div class="control__indicator"></div>
+                    </label>
+                    <label class="control-fb control--radio" >Center
+                        <input type="radio" ng-model="effect.justify" value="center"/>
+                        <div class="control__indicator"></div>
+                    </label>
+                    <label class="control-fb control--radio" >Right
+                        <input type="radio" ng-model="effect.justify" value="flex-end"/>
+                        <div class="control__indicator"></div>
+                    </label>
+
+                    <p>Align</p>
+                    <label class="control-fb control--radio">Top
+                        <input type="radio" ng-model="effect.align" value="flex-start"/>
+                        <div class="control__indicator"></div>
+                    </label>
+                    <label class="control-fb control--radio" >Center
+                        <input type="radio" ng-model="effect.align" value="center"/>
+                        <div class="control__indicator"></div>
+                    </label>
+                    <label class="control-fb control--radio" >Bottom
+                        <input type="radio" ng-model="effect.align" value="flex-end"/>
+                        <div class="control__indicator"></div>
+                    </label>
+                </collapsable-panel>
+                <!-- /Container Settings Accordion -->
+                
+                <!-- Overlay Settings Accordion -->
+                <div style="margin-bottom: 10px; margin-top: 10px;"></div>
+                <collapsable-panel header="Overlay Settings">
+                        <eos-overlay-position effect="effect" class="setting-padtop"></eos-overlay-position>
+                        <eos-enter-exit-animations effect="effect" class="setting-padtop"></eos-enter-exit-animations>
+                        <eos-overlay-instance effect="effect" class="setting-padtop"></eos-overlay-instance>
+                </collapsable-panel>
+                <!-- /Overlay Settings Accordion ends -->
             </eos-container>
-            <!-- /Advanced Settings Accordion ends -->
 
-            <!-- Overlay Settings Accordion -->
-            <eos-container>
-                <div style="margin-bottom: 20px; margin-top: 20px;">
-                    <div class="sys-command-row" ng-init="hidePanel = true" ng-click="hidePanel = !hidePanel">
-                        <div style="flex-basis: 100%;padding-left: 20px;">
-                            Overlay Settings
-                        </div>
-                        <div style="flex-basis:30px; flex-shrink: 0;">
-                            <i class="fas"></i>
-                        </div>
-                    </div>
-                    <div uib-collapse="hidePanel" class="sys-command-expanded">
-                        <div style="padding: 15px 20px 10px 20px;">
-                            <div class="input-group" style="margin-bottom: 10px;">
-                                <span class="input-group-addon">Width (in pixels)</span>
-                                <input
-                                    class="form-control"
-                                    type="number"
-                                    min="1" max="10000"
-                                    ng-model="effect.width">
-                                <span class="input-group-addon">Height (in pixels)</span>
-                                <input
-                                    class="form-control"
-                                    type="number"
-                                    min="1" max="10000"
-                                    ng-model="effect.height">
-                            </div>
-                            <p>This defines the size of the (invisible) box that the above timer will be placed in.</p>
-
-                            <label class="control-fb control--checkbox"> Show Debug Border <tooltip text="'Show a red border around the timer to make it easier to see its position.'"></tooltip>
-                                <input type="checkbox" ng-model="effect.debugBorder" />
-                                <div class="control__indicator"></div>
-                            </label>
-
-                            <p>Justification</p>
-                            <label class="control-fb control--radio">Left
-                                <input type="radio" ng-model="effect.justify" value="flex-start"/>
-                                <div class="control__indicator"></div>
-                            </label>
-                            <label class="control-fb control--radio" >Center
-                                <input type="radio" ng-model="effect.justify" value="center"/>
-                                <div class="control__indicator"></div>
-                            </label>
-                            <label class="control-fb control--radio" >Right
-                                <input type="radio" ng-model="effect.justify" value="flex-end"/>
-                                <div class="control__indicator"></div>
-                            </label>
-
-                            <p>Align</p>
-                            <label class="control-fb control--radio">Top
-                                <input type="radio" ng-model="effect.align" value="flex-start"/>
-                                <div class="control__indicator"></div>
-                            </label>
-                            <label class="control-fb control--radio" >Center
-                                <input type="radio" ng-model="effect.align" value="center"/>
-                                <div class="control__indicator"></div>
-                            </label>
-                            <label class="control-fb control--radio" >Bottom
-                                <input type="radio" ng-model="effect.align" value="flex-end"/>
-                                <div class="control__indicator"></div>
-                            </label>
-                        </div>
-                        <div style="padding: 15px 20px 10px 20px;">
-                            <eos-overlay-position effect="effect" class="setting-padtop"></eos-overlay-position>
-                            <eos-enter-exit-animations effect="effect" class="setting-padtop"></eos-enter-exit-animations>
-                            <eos-overlay-instance effect="effect" class="setting-padtop"></eos-overlay-instance>
-                        </div>
-                    </div>
-                </div>
-            </eos-container>
             <div class="effect-info alert alert-warning">
                 This effect requires the Firebot overlay to be loaded in your broadcasting software. <a href ng-click="showOverlayInfoModal(effect.overlayInstance)" style="text-decoration:underline">Learn more</a>
             </div>
-
-            <!-- /Overlay Settings Accordion ends -->
             `,
-        optionsController: ($scope) => {
+        optionsController: ($scope, utilityService) => {
+            $scope.showOverlayInfoModal = function(overlayInstance: string) {
+                utilityService.showOverlayInfoModal(overlayInstance);
+            };
         },
         optionsValidator: (effect) => {
             let errors = [];
