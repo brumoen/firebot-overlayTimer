@@ -22,15 +22,9 @@ interface EffectModel {
     customCoords: any;
     position: any;
     duration: number;
-    height: number;
-    width: number;
-    justify: string;
-    align: string;
-    debugBorder: Boolean;
-    dropShadow: Boolean;
+    timerDelay: number;
     overlayInstance: string;
-    html: string;
-    
+    html: string;    
 }
 
 export function buildOverlayTimerEffectType(
@@ -60,9 +54,9 @@ export function buildOverlayTimerEffectType(
             },
         },
         optionsTemplate: `
-            <eos-container header="Timer Name">
+            <eos-container header="Timer">
                 <firebot-input input-title="Title" model="effect.timerTitle" placeholder="Enter a name for the timer."></firebot-input>
-                <label class="control-fb control--checkbox" style="margin-top:15px"> Show Timer name
+                <label class="control-fb control--checkbox" style="margin-top:15px"> Show Timer Title
                         <input type="checkbox" ng-model="effect.timerIncludeName">
                         <div class="control__indicator"></div>
                 </label>
@@ -74,7 +68,7 @@ export function buildOverlayTimerEffectType(
             <!-- Advanced Settings Accordion -->
 
             <div style="margin-bottom: 10px; margin-top: 10px;"></div>
-            <eos-container header="Settings">
+            <eos-container header="Settings" pad-top="true">
                 <collapsable-panel header="Advanced Settings">
                     <div class="muted" style="font-weight:bold; font-size: 12px;">
                         DESCRIPTION
@@ -95,64 +89,19 @@ export function buildOverlayTimerEffectType(
                             * How long do you want the timer to stay on screen when it's done?
                         </p>
                     </div>
+                    <eos-container pad-top="true">
+                        <effect-list effects="effect.effectList"
+                            trigger="{{trigger}}"
+                            trigger-meta="triggerMeta"
+                            update="effectListUpdated(effects)"
+                            header="Effects"
+                            modalId="{{modalId}}"
+                            hide-numbers="true"></effect-list>
+                    </eos-container>
                 </collapsable-panel>
                 <!-- /Advanced Settings Accordion ends -->
 
                 <div style="margin-bottom: 10px; margin-top: 10px;"></div>
-
-                <!-- Container Settings Accordion -->
-                <collapsable-panel header="Container Settings">
-                    <div class="input-group" style="margin-bottom: 10px;">
-                        <span class="input-group-addon">Width (in pixels)</span>
-                        <input
-                            class="form-control"
-                            type="number"
-                            min="1" max="10000"
-                            ng-model="effect.width">
-                        <span class="input-group-addon">Height (in pixels)</span>
-                        <input
-                            class="form-control"
-                            type="number"
-                            min="1" max="10000"
-                            ng-model="effect.height">
-                    </div>
-                    <p>This defines the size of the (invisible) box that the above timer will be placed in.</p>
-
-                    <label class="control-fb control--checkbox"> Show Debug Border <tooltip text="'Show a red border around the timer to make it easier to see its position.'"></tooltip>
-                        <input type="checkbox" ng-model="effect.debugBorder" />
-                        <div class="control__indicator"></div>
-                    </label>
-
-                    <p>Justification</p>
-                    <label class="control-fb control--radio">Left
-                        <input type="radio" ng-model="effect.justify" value="flex-start"/>
-                        <div class="control__indicator"></div>
-                    </label>
-                    <label class="control-fb control--radio" >Center
-                        <input type="radio" ng-model="effect.justify" value="center"/>
-                        <div class="control__indicator"></div>
-                    </label>
-                    <label class="control-fb control--radio" >Right
-                        <input type="radio" ng-model="effect.justify" value="flex-end"/>
-                        <div class="control__indicator"></div>
-                    </label>
-
-                    <p>Align</p>
-                    <label class="control-fb control--radio">Top
-                        <input type="radio" ng-model="effect.align" value="flex-start"/>
-                        <div class="control__indicator"></div>
-                    </label>
-                    <label class="control-fb control--radio" >Center
-                        <input type="radio" ng-model="effect.align" value="center"/>
-                        <div class="control__indicator"></div>
-                    </label>
-                    <label class="control-fb control--radio" >Bottom
-                        <input type="radio" ng-model="effect.align" value="flex-end"/>
-                        <div class="control__indicator"></div>
-                    </label>
-                </collapsable-panel>
-                <!-- /Container Settings Accordion -->
-                
                 <!-- Overlay Settings Accordion -->
                 <div style="margin-bottom: 10px; margin-top: 10px;"></div>
                 <collapsable-panel header="Overlay Settings">
@@ -175,7 +124,7 @@ export function buildOverlayTimerEffectType(
         optionsValidator: (effect) => {
             let errors = [];
             if(effect.timerTitle == null || effect.timerTitle.length < 1 ){
-                errors.push("Please enter name for the timer");
+                errors.push("Please enter a name for the timer");
             }
             if(effect.timerDuration == null ){
                 errors.push("Please enter a value for the timer");
@@ -185,8 +134,23 @@ export function buildOverlayTimerEffectType(
         onTriggerEvent: (event) => {
             return new Promise((resolve) => {
                 const effect = event.effect;
+                let endTriggerCallUrl;
+
+                if(typeof effect.endTriggerCallUrl === 'undefined'){
+                    endTriggerCallUrl = 0;
+                } else {
+                    endTriggerCallUrl = effect.endTriggerCallUrl;
+                }
+                let duration = 5; // Default to 5 will be adjusted later
+                if(typeof effect.timerDelay != 'undefined'){
+                    duration = effect.timerDuration + +effect.timerDelay;
+                } else {
+                    duration = effect.timerDuration + +2;
+                }
+                logger.debug('Duration: ', duration); // TODO: Remove before publishing
+                let timerTitle = effect.timerTitle;
+                
                 logger.debug("effect: ", effect);
-                logger.debug("endTrigger: ", effect.endTriggerCallUrl);
                 const timeStamp = Date.now();
                 const removal = `timer_${timeStamp}`;
 
@@ -319,7 +283,8 @@ export function buildOverlayTimerEffectType(
                     const TIME_LIMIT_${removal} = ${effect.timerDuration};
 
                     var name_${removal} = "${effect.timerTitle}";
-                    var endEventCall_${removal} = "${effect.endTriggerCallUrl}";
+                    var endEventCall_${removal} = "${endTriggerCallUrl}";
+                    console.log("EventCallUrl", endEventCall_${removal});
 
                     let timePassed_${removal} = 0;
                     let timeLeft_${removal} = TIME_LIMIT_${removal};
@@ -352,15 +317,17 @@ export function buildOverlayTimerEffectType(
                     document.getElementById("title_${removal}").innerText = name_${removal};
                     startTimer_${removal}();
 
-                    function onTimesUp_${removal}() {
+                    function onTimesUp_${removal}(endEventCall_${removal} = 0) {
                         clearInterval(timerInterval_${removal});
-                        fetch(endEventCall_${removal})
+                        if(endEventCall_${removal} != 0){
+                            fetch(endEventCall_${removal})
                                     .then(function (result) {
                                         console.log(result);
                                     })
                                     .catch(function (err) {
                                         console.error(err);
                                     });
+                        }                        
                     }
 
                     function startTimer_${removal}() {
@@ -372,7 +339,7 @@ export function buildOverlayTimerEffectType(
                             setRemainingPathColor_${removal}(timeLeft_${removal});
 
                             if (timeLeft_${removal} === 0) {
-                            onTimesUp_${removal}();
+                            onTimesUp_${removal}(endEventCall_${removal});
                             }
                         }, 1000);
                     }
@@ -420,14 +387,10 @@ export function buildOverlayTimerEffectType(
                 </div>
                 `
                 
-                let duration = +effect.timerDuration + +2;
-                logger.debug('Duration: ', duration); // TODO: Remove before publishing
-                let timerTitle = effect.timerTitle;
-                logger.debug("removal1: ", removal);
                 let combineHTML = styleHTML + contentsHTML + jsHTML;
 
                 const timerHTML = `<div id="${removal}">${combineHTML}</div>`;
-                logger.debug("removal2: ", removal);
+                logger.debug("removal-id: ", removal);
 
                 //data transfer object
                 let dto = {
@@ -443,12 +406,7 @@ export function buildOverlayTimerEffectType(
                     customCoords: effect.customCoords,
                     position: effect.position,
                     duration: effect.duration,
-                    height: effect.height,
-                    width: effect.width,
-                    justify: effect.justify,
-                    align: effect.align,
-                    debugBorder: effect.debugBorder,
-                    dropShadow: effect.dropShadow,
+                    endTriggerCallUrl: endTriggerCallUrl,
                     overlayInstance: effect.overlayInstance,
                     html: timerHTML
                 };
@@ -459,27 +417,9 @@ export function buildOverlayTimerEffectType(
                     dto.duration = 5;
                 }
 
-                if (dto.height == null || dto.height < 1) {
-                    logger.debug("Setting default height");
-                    dto.height = 200;
-                }
-
-                if (dto.width == null || dto.width < 1) {
-                    logger.debug("Setting default width");
-                    dto.width = 400;
-                }
-
                 if (dto.position === "" || dto.position == null) {
-                    logger.debug("Setting default overlay position");
+                    // logger.debug("Setting default overlay position");
                     dto.position = "Middle";
-                }
-
-                if (dto.justify == null) {
-                    dto.justify = "center";
-                }
-
-                if (dto.align == null) {
-                    dto.align = "center";
                 }
 
                 logger.info("Settings from overlayTimerEffect: ");
